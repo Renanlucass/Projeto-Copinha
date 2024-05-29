@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Dimensions, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ProfilePicture from '../perfil/pictureProfile';
@@ -8,11 +8,13 @@ import CampeonatosSeguidos from '../campeonatosSeguidos/followCamp';
 import AbrirLink from '../links/openLinks';
 import Contato from '../contact/contact';
 import PoliticaPrivacidade from '../privacyPolicy/privacyPolicy';
+import SignUpModal from '../modal/siginUpModal'
 
 const screenHeight = Dimensions.get('window').height;
 
 export default function Menu({ isOpen, onClose }) {
   const menuTranslateX = useRef(new Animated.Value(-348)).current;
+  const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
 
   useEffect(() => {
     Animated.timing(menuTranslateX, {
@@ -23,36 +25,51 @@ export default function Menu({ isOpen, onClose }) {
     }).start();
   }, [isOpen]);
 
+  const handleSignUpPress = () => {
+    setIsSignUpModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsSignUpModalVisible(false);
+  };
+
   return (
-    <Animated.View style={[styles.menu, { transform: [{ translateX: menuTranslateX }] }]}>
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-        <Ionicons name="arrow-forward" size={35} color="black" />
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <Animated.View style={[styles.menu, { transform: [{ translateX: menuTranslateX }] }]}>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <Ionicons name="arrow-forward" size={35} color="black" />
+        </TouchableOpacity>
 
-      <ImageBackground source={require('../../assets/camp.jpeg')} style={styles.profileContainer}>
-        <View style={styles.profileContent}>
-          <ProfilePicture />
-          <SignUpButton />
+        <ImageBackground source={require('../../assets/camp.jpeg')} style={styles.profileContainer}>
+          <View style={styles.profileContent}>
+            <ProfilePicture />
+            <SignUpButton onPress={handleSignUpPress} /> 
+          </View>
+        </ImageBackground>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Campeonatos</Text>
+          <OrganizarCampeonatos />
+          <CampeonatosSeguidos />
+          <AbrirLink />
         </View>
-      </ImageBackground>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Campeonatos</Text>
-        <OrganizarCampeonatos />
-        <CampeonatosSeguidos />
-        <AbrirLink />
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Ajuda</Text>
+          <Contato />
+          <PoliticaPrivacidade />
+        </View>
+      </Animated.View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Ajuda</Text>
-        <Contato />
-        <PoliticaPrivacidade />
-      </View>
-    </Animated.View>
+      <SignUpModal visible={isSignUpModalVisible} onClose={handleModalClose} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   menu: {
     position: 'absolute',
     top: 25,

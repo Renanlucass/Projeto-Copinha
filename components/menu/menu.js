@@ -1,20 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Dimensions, ImageBackground } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import ProfilePicture from '../perfil/pictureProfile';
 import SignUpButton from '../signUp/signUpButton';
-import OrganizarCampeonatos from '../campeonatos/orgCampeonatos';
-import CampeonatosSeguidos from '../campeonatosSeguidos/followCamp';
-import AbrirLink from '../links/openLinks';
-import Contato from '../contact/contact';
-import PoliticaPrivacidade from '../privacyPolicy/privacyPolicy';
-import SignUpModal from '../modal/siginUpModal'
+import { useNavigation } from '@react-navigation/native';
+import SignUpModal from '../modal/siginUpModal';
 
 const screenHeight = Dimensions.get('window').height;
 
 export default function Menu({ isOpen, onClose }) {
   const menuTranslateX = useRef(new Animated.Value(-348)).current;
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     Animated.timing(menuTranslateX, {
@@ -33,6 +30,26 @@ export default function Menu({ isOpen, onClose }) {
     setIsSignUpModalVisible(false);
   };
 
+  const navigateToOrganizarCampeonatos = () => {
+    onClose();
+    navigation.navigate('Campeonatos');
+  };
+
+  const navigateToCampeonatosSeguidos = () => {
+    onClose();
+    navigation.navigate('Seguidos');
+  };
+
+  const navigateToContato = () => {
+    onClose();
+    navigation.navigate('Contato');
+  };
+
+  const navigateToPoliticaPrivacidade = () => {
+    onClose();
+    navigation.navigate('PoliticaPrivacidade');
+  };
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.menu, { transform: [{ translateX: menuTranslateX }] }]}>
@@ -43,24 +60,35 @@ export default function Menu({ isOpen, onClose }) {
         <ImageBackground source={require('../../assets/camp.jpeg')} style={styles.profileContainer}>
           <View style={styles.profileContent}>
             <ProfilePicture />
-            <SignUpButton onPress={handleSignUpPress} /> 
+            <SignUpButton onPress={handleSignUpPress} />
           </View>
         </ImageBackground>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Campeonatos</Text>
-          <OrganizarCampeonatos />
-          <CampeonatosSeguidos />
-          <AbrirLink />
+          <TouchableOpacity style={styles.sectionItem} onPress={navigateToOrganizarCampeonatos}>
+            <Ionicons name="trophy" size={24} color="black" />
+            <Text style={styles.sectionItemText}>Organizar Campeonatos</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.sectionItem} onPress={navigateToCampeonatosSeguidos}>
+            <Ionicons name="bookmark" size={24} color="black" />
+            <Text style={styles.sectionItemText}>Campeonatos Seguidos</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ajuda</Text>
-          <Contato />
-          <PoliticaPrivacidade />
+          <TouchableOpacity style={styles.sectionItem} onPress={navigateToContato}>
+            <FontAwesome6 name="contact-book" size={24} color="black" />
+            <Text style={styles.sectionItemText}>Contato</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.sectionItem} onPress={navigateToPoliticaPrivacidade}>
+            <MaterialIcons name="policy" size={24} color="black" />
+            <Text style={styles.sectionItemText}>Política de Privacidade</Text>
+          </TouchableOpacity>
         </View>
       </Animated.View>
-
+      
       <SignUpModal visible={isSignUpModalVisible} onClose={handleModalClose} />
     </View>
   );
@@ -72,7 +100,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    top: 25,
+    top: 45,
     bottom: 0,
     left: 0,
     width: 350,
@@ -89,23 +117,38 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     width: '100%',
-    height: 'auto',
-    marginTop: 10,
+    height: 300,
     alignItems: 'center',
+
   },
   profileContent: {
-    marginTop: 10,
     marginBottom: 20,
-    display: 'flex',
     alignItems: 'center',
   },
   section: {
-    marginTop: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 15,
+    color: '#333',
+  },
+  sectionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    padding: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  sectionItemText: {
+    marginLeft: 10,
+    fontSize: 18,
+    color: '#333',
   },
 });

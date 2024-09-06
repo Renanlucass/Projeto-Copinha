@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SignUpModal({ visible, onClose }) {
@@ -7,6 +7,43 @@ export default function SignUpModal({ visible, onClose }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmSenha, setConfirmSenha] = useState('');
+  const [showSenha, setShowSenha] = useState(false);
+  const [showConfirmSenha, setShowConfirmSenha] = useState(false);
+
+  const animation = new Animated.Value(0);
+
+  React.useEffect(() => {
+    if (visible) {
+      Animated.parallel([
+        Animated.spring(animation, {
+          toValue: 1,
+          friction: 5,
+          tension: 40,
+          useNativeDriver: true,
+        }).start(),
+        Animated.timing(backgroundOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(),
+      ]);
+    } else {
+      Animated.parallel([
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(),
+        Animated.timing(backgroundOpacity, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(),
+      ]);
+    }
+  }, [visible]);
+
+  const backgroundOpacity = new Animated.Value(0);
 
   const handleClear = () => {
     setNomeUsuario('');
@@ -16,13 +53,34 @@ export default function SignUpModal({ visible, onClose }) {
   };
 
   const handleModalClose = () => {
-    onClose();
+    Animated.parallel([
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }).start(),
+      Animated.timing(backgroundOpacity, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }).start(() => onClose()),
+    ]);
   };
 
+  const scale = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 1],
+  });
+
+  const opacity = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+  });
+
   return (
-    <Modal visible={visible} animationType="slide" transparent>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+    <Modal visible={visible} transparent animationType="none">
+      <Animated.View style={[styles.modalContainer, { opacity: backgroundOpacity }]}>
+        <Animated.View style={[styles.modalContent, { transform: [{ scale }], opacity }]}>
           <View style={styles.header}>
             <Text style={styles.headerTitleLeft}>Criar Conta</Text>
             <Text style={styles.headerTitleRight}>Login</Text>
@@ -47,23 +105,33 @@ export default function SignUpModal({ visible, onClose }) {
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Senha</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="**********"
-              secureTextEntry
-              value={senha}
-              onChangeText={text => setSenha(text)}
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.input, styles.passwordInput]}
+                placeholder="**********"
+                secureTextEntry={!showSenha}
+                value={senha}
+                onChangeText={text => setSenha(text)}
+              />
+              <TouchableOpacity onPress={() => setShowSenha(!showSenha)} style={styles.eyeIcon}>
+                <Ionicons name={showSenha ? 'eye-off' : 'eye'} size={24} color="black" />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}>Confirme a Senha</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="**********"
-              secureTextEntry
-              value={confirmSenha}
-              onChangeText={text => setConfirmSenha(text)}
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.input, styles.passwordInput]}
+                placeholder="**********"
+                secureTextEntry={!showConfirmSenha}
+                value={confirmSenha}
+                onChangeText={text => setConfirmSenha(text)}
+              />
+              <TouchableOpacity onPress={() => setShowConfirmSenha(!showConfirmSenha)} style={styles.eyeIcon}>
+                <Ionicons name={showConfirmSenha ? 'eye-off' : 'eye'} size={24} color="black" />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={[styles.button, styles.cadastrarButton]}>
@@ -73,13 +141,15 @@ export default function SignUpModal({ visible, onClose }) {
               <Text style={styles.buttonText}>Limpar</Text>
             </TouchableOpacity>
           </View>
-        </View>
-        <TouchableOpacity style={styles.closeButtonContainer} onPress={handleModalClose}>
-          <View style={styles.closeButtonIconContainer}>
-            <Ionicons name="close" size={24} color="black" />
-          </View>
-        </TouchableOpacity>
-      </View>
+        </Animated.View>
+        <Animated.View style={[styles.closeButtonContainer, { opacity }]}>
+          <TouchableOpacity onPress={handleModalClose}>
+            <View style={styles.closeButtonIconContainer}>
+              <Ionicons name="close" size={24} color="black" />
+            </View>
+          </TouchableOpacity>
+        </Animated.View>
+      </Animated.View>
     </Modal>
   );
 }
@@ -114,22 +184,32 @@ const styles = StyleSheet.create({
   headerTitleRight: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#FF8C00',
+    textDecorationLine: 'underline',
+    textDecorationColor: '#fff',
   },
   inputContainer: {
-    marginBottom: 10,
+    marginBottom: 20,
   },
   inputLabel: {
     fontSize: 16,
-    fontWeight: '#ccc',
+    fontWeight: 'bold',
     marginBottom: 5,
   },
   input: {
     height: 40,
+    width: '95%',
     borderBottomWidth: 2,
     borderBottomColor: '#000',
     marginBottom: 10,
     paddingHorizontal: 5,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
   },
   buttonsContainer: {
     flexDirection: 'column',
@@ -137,7 +217,7 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 10,
-    width: '70%',
+    width: '60%',
     borderRadius: 15,
     alignSelf: 'center',
     alignItems: 'center',
@@ -155,9 +235,8 @@ const styles = StyleSheet.create({
   },
   closeButtonContainer: {
     position: 'relative',
-    bottom: -20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    top: 30,
+    zIndex: 1,
   },
   closeButtonIconContainer: {
     backgroundColor: '#fff',

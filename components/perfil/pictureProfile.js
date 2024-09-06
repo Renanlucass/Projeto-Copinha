@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    marginTop: 45,
+    marginTop: 60,
     marginBottom: 20,
   },
   profilePicture: {

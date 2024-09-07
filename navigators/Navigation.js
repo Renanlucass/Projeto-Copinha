@@ -1,8 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-
-// Importe suas telas aqui
 import HomeScreen from './screens/HomeScreen';
 import OrganizarCampeonatos from './screens/OrganizarCampeonatos';
 import CampeonatosSeguidos from './screens/CampeonatosSeguidos';

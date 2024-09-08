@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
 export default function NameInputModal({
   championshipName,
   onChangeName,
   onCreate,
   onBack,
+  pickImage,
+  championshipImage,
 }) {
   return (
     <View>
@@ -16,6 +18,15 @@ export default function NameInputModal({
         value={championshipName}
         onChangeText={onChangeName}
       />
+
+      <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
+        <Text style={styles.imagePickerText}>Selecionar Imagem</Text>
+      </TouchableOpacity>
+
+      {championshipImage && (
+        <Image source={{ uri: championshipImage }} style={styles.selectedImage} />
+      )}
+
       <View style={styles.buttonGroup}>
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
           <Text style={styles.backButtonText}>Voltar</Text>
@@ -41,6 +52,24 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
     marginBottom: 15,
     paddingHorizontal: 10,
+  },
+  imagePickerButton: {
+    padding: 10,
+    backgroundColor: '#041F21',
+    borderRadius: 15,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  imagePickerText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  selectedImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 15,
+    alignSelf: 'center',
   },
   buttonGroup: {
     flexDirection: 'row',

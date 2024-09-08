@@ -1,17 +1,40 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TextInput, Dimensions, TouchableOpacity, Animated, Easing } from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, Image, TouchableOpacity, Animated, Easing } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Menu from '../components/menu/menu';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { getChampionships } from '../data/database';
+import ChampionshipCard from '../components/card/ChampionshipCard';
 
-export default function App() {
+export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState('Região');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [championships, setChampionships] = useState([]);
   const tabWidth = wp('45%');
   const menuTranslateX = useRef(new Animated.Value(-wp('80%'))).current;
-
   const navigation = useNavigation();
+
+  useEffect(() => {
+    loadChampionships();
+  }, []);
+
+  const loadChampionships = async () => {
+    try {
+      const loadedChampionships = await getChampionships();
+      const sortedChampionships = loadedChampionships.sort((a, b) => b.id - a.id);
+      setChampionships(sortedChampionships);
+    } catch (error) {
+      console.error('Error loading championships:', error);
+    }
+  };
+
+  // Atualiza a lista quando a tela ganha foco
+  useFocusEffect(
+    useCallback(() => {
+      loadChampionships();
+    }, [])
+  );
 
   const handleTabPress = (tab) => {
     setActiveTab(tab);
@@ -38,8 +61,8 @@ export default function App() {
     }
   };
 
-  const handleChampionshipsNavigation = () => {
-    navigation.navigate('Championships');
+  const handleChampionshipPress = (championship) => {
+    navigation.navigate('ChampionshipDetail', { championship });
   };
 
   return (
@@ -79,15 +102,14 @@ export default function App() {
       </View>
 
       <ScrollView contentContainerStyle={styles.cardsScrollView}>
-        <Text style={styles.organizersTitle}>Organizadores</Text>
+        <Text style={styles.organizersTitle}>Campeonatos</Text>
         <View style={styles.cardsContainer}>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <TouchableOpacity onPress={handleChampionshipsNavigation} key={index} style={styles.cardWrapper}>
-              <View style={styles.card}>
-                <Image source={require('../assets/logo.png')} style={styles.cardImage} />
-              </View>
-              <Text style={styles.cardText}>Campeonato {index + 1}</Text>
-            </TouchableOpacity>
+          {championships.map((championship) => (
+            <ChampionshipCard
+              key={championship.id}
+              championship={championship}
+              onPress={() => handleChampionshipPress(championship)}
+            />
           ))}
         </View>
       </ScrollView>
@@ -198,34 +220,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
-  cardWrapper: {
-    width: '48%',
-    marginBottom: hp('2%'),
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-    height: hp('20%'),
-    justifyContent: 'center', 
-  },
-  cardImage: {
-    width: '90%', 
-    height: '70%',
-    resizeMode: 'contain',
-  },
-  cardText: {
-    marginTop: 5,
-    fontSize: wp('4%'),
-    textAlign: 'center',
   },
 });

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const LineUpScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Escalação</Text>
+      <Text style={styles.text}>Partidas</Text>
     </View>
   );
 };

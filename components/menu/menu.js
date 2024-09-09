@@ -100,14 +100,10 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    // top: 45,
-    bottom: 0,
-    left: 0,
     width: 350,
     height: '100%',
     backgroundColor: '#1F1F1F',
     zIndex: 1,
-    padding: 0,
   },
   closeButton: {
     position: 'absolute',

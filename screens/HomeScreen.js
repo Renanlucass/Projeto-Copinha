@@ -11,6 +11,8 @@ export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState('Região');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [championships, setChampionships] = useState([]);
+  const [filteredChampionships, setFilteredChampionships] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const tabWidth = wp('45%');
   const menuTranslateX = useRef(new Animated.Value(-wp('80%'))).current;
   const navigation = useNavigation();
@@ -19,22 +21,22 @@ export default function HomeScreen() {
     loadChampionships();
   }, []);
 
-  const loadChampionships = async () => {
-    try {
-      const loadedChampionships = await getChampionships();
-      const sortedChampionships = loadedChampionships.sort((a, b) => b.id - a.id);
-      setChampionships(sortedChampionships);
-    } catch (error) {
-      console.error('Error loading championships:', error);
-    }
-  };
-
-  // Atualiza a lista quando a tela ganha foco
   useFocusEffect(
     useCallback(() => {
       loadChampionships();
     }, [])
   );
+
+  const loadChampionships = async () => {
+    try {
+      const loadedChampionships = await getChampionships();
+      const sortedChampionships = loadedChampionships.sort((a, b) => b.id - a.id);
+      setChampionships(sortedChampionships);
+      setFilteredChampionships(sortedChampionships);
+    } catch (error) {
+      console.error('Error loading championships:', error);
+    }
+  };
 
   const handleTabPress = (tab) => {
     setActiveTab(tab);
@@ -61,8 +63,24 @@ export default function HomeScreen() {
     }
   };
 
+  const handleSearch = (text) => {
+    setSearchText(text);
+    if (text) {
+      const filtered = championships.filter(championship =>
+        championship.name.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredChampionships(filtered);
+    } else {
+      setFilteredChampionships(championships);
+    }
+  };
+
   const handleChampionshipPress = (championship) => {
-    navigation.navigate('ChampionshipDetail', { championship });
+    navigation.navigate('ChampionshipDetail', {
+      name: championship.name,
+      image: championship.image,
+      description: championship.description,
+    });
   };
 
   return (
@@ -72,7 +90,7 @@ export default function HomeScreen() {
       </Animated.View>
       {!isMenuOpen && (
         <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
-          <Ionicons name={'menu'} size={32} color="black" />
+          <Ionicons name={'menu'} size={32} color="white" />
         </TouchableOpacity>
       )}
       <View style={styles.headerContainer}>
@@ -83,7 +101,12 @@ export default function HomeScreen() {
 
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={22} color="#111" style={styles.searchIcon} />
-        <TextInput style={styles.searchInput} placeholder="Campeonatos" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar campeonatos"
+          value={searchText}
+          onChangeText={handleSearch}
+        />
       </View>
 
       <View style={styles.tabContainer}>
@@ -104,7 +127,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.cardsScrollView}>
         <Text style={styles.organizersTitle}>Campeonatos</Text>
         <View style={styles.cardsContainer}>
-          {championships.map((championship) => (
+          {filteredChampionships.map((championship) => (
             <ChampionshipCard
               key={championship.id}
               championship={championship}
@@ -121,7 +144,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: '#2f4f4f',
+    // backgroundColor: '#084d6e',
   },
   headerContainer: {
     flexDirection: 'row',
@@ -156,6 +180,7 @@ const styles = StyleSheet.create({
     height: hp('10%'),
     resizeMode: 'contain',
     marginBottom: 10,
+    color: 'white'
   },
   searchContainer: {
     flexDirection: 'row',
@@ -167,7 +192,7 @@ const styles = StyleSheet.create({
     width: wp('85%'),
     marginVertical: hp('1%'),
     marginHorizontal: wp('5%'),
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -197,13 +222,13 @@ const styles = StyleSheet.create({
   },
   tabIndicator: {
     height: hp('0.5%'),
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     position: 'absolute',
     bottom: 0,
     borderRadius: hp('0.25%'),
   },
   activeTabText: {
-    color: 'black',
+    color: 'white',
   },
   inactiveTabText: {
     color: '#9C9C9C',
@@ -212,6 +237,7 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontWeight: 'bold',
     marginVertical: hp('2%'),
+    color: 'white',
   },
   cardsScrollView: {
     flexGrow: 1,

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Dimensions, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Dimensions } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import ProfilePicture from '../perfil/pictureProfile';
 import SignUpButton from '../signUp/signUpButton';
@@ -54,24 +54,24 @@ export default function Menu({ isOpen, onClose }) {
     <View style={styles.container}>
       <Animated.View style={[styles.menu, { transform: [{ translateX: menuTranslateX }] }]}>
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Ionicons name="arrow-forward" size={35} color="black" />
+          <Ionicons name="arrow-forward" size={35} color="white" />
         </TouchableOpacity>
 
-        <ImageBackground source={require('../../assets/camp.jpeg')} style={styles.profileContainer}>
+        <View style={styles.profileContainer}>
           <View style={styles.profileContent}>
             <ProfilePicture />
             <SignUpButton onPress={handleSignUpPress} />
           </View>
-        </ImageBackground>
+        </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Campeonatos</Text>
           <TouchableOpacity style={styles.sectionItem} onPress={navigateToOrganizarCampeonatos}>
-            <Ionicons name="trophy" size={24} color="black" />
+            <Ionicons name="trophy" size={24} color="white" />
             <Text style={styles.sectionItemText}>Organizar Campeonatos</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.sectionItem} onPress={navigateToCampeonatosSeguidos}>
-            <Ionicons name="bookmark" size={24} color="black" />
+            <Ionicons name="bookmark" size={24} color="white" />
             <Text style={styles.sectionItemText}>Campeonatos Seguidos</Text>
           </TouchableOpacity>
         </View>
@@ -79,16 +79,16 @@ export default function Menu({ isOpen, onClose }) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ajuda</Text>
           <TouchableOpacity style={styles.sectionItem} onPress={navigateToContato}>
-            <FontAwesome6 name="contact-book" size={24} color="black" />
+            <FontAwesome6 name="contact-book" size={24} color="white" />
             <Text style={styles.sectionItemText}>Contato</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.sectionItem} onPress={navigateToPoliticaPrivacidade}>
-            <MaterialIcons name="policy" size={24} color="black" />
+            <MaterialIcons name="policy" size={24} color="white" />
             <Text style={styles.sectionItemText}>Política de Privacidade</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
-      
+
       <SignUpModal visible={isSignUpModalVisible} onClose={handleModalClose} />
     </View>
   );
@@ -100,13 +100,13 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    top: 45,
+    // top: 45,
     bottom: 0,
     left: 0,
     width: 350,
     height: '100%',
-    backgroundColor: '#fff',
-    zIndex: 3,
+    backgroundColor: '#1F1F1F',
+    zIndex: 1,
     padding: 0,
   },
   closeButton: {
@@ -118,8 +118,9 @@ const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
     height: 300,
+    backgroundColor: '#2C2C2C', 
     alignItems: 'center',
-
+    justifyContent: 'center',
   },
   profileContent: {
     marginBottom: 20,
@@ -132,23 +133,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: '#333',
+    color: 'white', 
   },
   sectionItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
     padding: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#333', 
     borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
   },
   sectionItemText: {
     marginLeft: 10,
     fontSize: 18,
-    color: '#333',
+    color: 'white', 
   },
 });

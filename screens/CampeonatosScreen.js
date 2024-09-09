@@ -6,7 +6,6 @@ import * as ImagePicker from 'expo-image-picker';
 import TypeSelectionModal from '../components/modal/SelectionModal';
 import NameInputModal from '../components/modal/InputModal';
 import { initializeDatabase, addChampionship, getChampionships } from '../data/database';
-import { useNavigation } from '@react-navigation/native';
 
 export default function OrganizeChampionshipsScreen({ route }) {
   const { updateChampionships } = route.params || {};
@@ -41,7 +40,6 @@ export default function OrganizeChampionshipsScreen({ route }) {
     setIsModalVisible(false);
     setChampionshipName('');
     setChampionshipImage(null);
-    // Recarregar campeonatos após o modal ser fechado
     loadChampionships();
   };
 

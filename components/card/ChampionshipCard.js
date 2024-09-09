@@ -1,5 +1,3 @@
-// components/ChampionshipCard.js
-
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -21,16 +19,16 @@ const styles = StyleSheet.create({
     marginBottom: hp('2%'),
   },
   card: {
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
+    backgroundColor: '#fff', 
+    borderColor: '#808080',  
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,   
     padding: 5,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowColor: '#000',   
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 8,
     height: hp('20%'),
     justifyContent: 'center',
   },
@@ -43,6 +41,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: wp('4%'),
     textAlign: 'center',
+    color: 'white',       
+    fontWeight: 'bold',       
   },
 });
 

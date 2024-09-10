@@ -26,21 +26,22 @@ const AddTeamScreen = ({ navigation }) => {
       Alert.alert('Erro', 'Por favor, insira o nome do time.');
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
-      console.log('imageUri during add/update:', imageUri);
-
+      // Use uma URI padrão se imageUri não estiver definido
+      const finalImageUri = imageUri || 'https://res.cloudinary.com/dsrnunimq/image/upload/v1725989446/xaxazshqy7o0zd6dplyi.jpg';
+       
       if (editingTeam) {
-        await updateTeam(editingTeam.id, teamName, imageUri || DEFAULT_TEAM_IMAGE);
+        await updateTeam(editingTeam.id, teamName, finalImageUri);
         Alert.alert('Sucesso', 'Time atualizado com sucesso!');
         setEditingTeam(null);
       } else {
-        await addTeam(teamName, imageUri || DEFAULT_TEAM_IMAGE);
+        await addTeam(teamName, finalImageUri);
         Alert.alert('Sucesso', 'Time adicionado com sucesso!');
       }
-
+  
       setTeamName('');
       setImageUri('');
       
@@ -53,6 +54,7 @@ const AddTeamScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
+  
 
   const handleSelectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();

@@ -9,6 +9,8 @@ import TableScreen from '../screens/TablesScreen';
 const Tab = createBottomTabNavigator();
 
 export default function ChampionshipDetailTabs({ route }) {
+  const params = route.params || {};
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -24,14 +26,14 @@ export default function ChampionshipDetailTabs({ route }) {
         tabBarActiveTintColor: '#fff',
         tabBarLabelStyle: {
           fontSize: 12, 
+                    backgroundColor: '#041F21', 
         },
-
       }}
     >
       <Tab.Screen 
         name="Inicio" 
         component={ChampionshipDetailScreen} 
-        initialParams={route.params}
+        initialParams={params}
         options={{ 
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
@@ -42,6 +44,7 @@ export default function ChampionshipDetailTabs({ route }) {
       <Tab.Screen 
         name="Partidas"
         component={LineUpScreen} 
+        initialParams={params}
         options={{ 
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
@@ -52,6 +55,7 @@ export default function ChampionshipDetailTabs({ route }) {
       <Tab.Screen 
         name="Tabela" 
         component={TableScreen} 
+        initialParams={params}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
@@ -62,6 +66,7 @@ export default function ChampionshipDetailTabs({ route }) {
       <Tab.Screen 
         name="Estatisticas" 
         component={StatsScreen} 
+        initialParams={params}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

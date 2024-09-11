@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: '90%',
-    resizeMode: 'contain',
+    resizeMode: 'contain',  
   },
   cardText: {
     marginTop: 5,

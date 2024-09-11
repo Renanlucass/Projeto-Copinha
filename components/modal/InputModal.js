@@ -3,7 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'reac
 
 export default function NameInputModal({
   championshipName,
+  championshipDescription,
   onChangeName,
+  onChangeDescription,
   onCreate,
   onBack,
   pickImage,
@@ -17,6 +19,13 @@ export default function NameInputModal({
         placeholder="Digite o nome do campeonato"
         value={championshipName}
         onChangeText={onChangeName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Digite a descrição do campeonato"
+        value={championshipDescription}
+        onChangeText={onChangeDescription}
       />
 
       <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
@@ -38,6 +47,7 @@ export default function NameInputModal({
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   modalTitle: {

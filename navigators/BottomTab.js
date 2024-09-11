@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import ChampionshipDetailScreen from '../screens/ChampionshipDetailsScreen';
-import LineUpScreen from '../screens/LineupScreen';
+import MatchesScreen from '../screens/MatchesScreen';
 import StatsScreen from '../screens/StatsScreen';
 import TableScreen from '../screens/TablesScreen';
 
@@ -26,7 +26,7 @@ export default function ChampionshipDetailTabs({ route }) {
         tabBarActiveTintColor: '#fff',
         tabBarLabelStyle: {
           fontSize: 12, 
-                    backgroundColor: '#041F21', 
+          backgroundColor: '#041F21', 
         },
       }}
     >
@@ -43,7 +43,7 @@ export default function ChampionshipDetailTabs({ route }) {
       />
       <Tab.Screen 
         name="Partidas"
-        component={LineUpScreen} 
+        component={MatchesScreen} 
         initialParams={params}
         options={{ 
           headerShown: false,

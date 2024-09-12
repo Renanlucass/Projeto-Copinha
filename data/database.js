@@ -57,22 +57,26 @@ export const getChampionships = async () => {
   return result;
 };
 
+// Atualizar Campeonato
 export const updateChampionship = async (id, name, image) => {
   const db = await getDatabase();
   await db.runAsync('UPDATE championships SET name = ?, image = ? WHERE id = ?', [name, image, id]);
 };
 
+//Deletar Campeonato 
 export const deleteChampionship = async (id) => {
   const db = await getDatabase();
   await db.runAsync('DELETE FROM championships WHERE id = ?', [id]);
 };
 
+// Adicionar Times
 export const addTeam = async (teamName, imageUri) => {
   const db = await getDatabase();
   const result = await db.runAsync('INSERT INTO teams (name, imageUri) VALUES (?, ?)', [teamName, imageUri]);
   return result.insertId;
 };
 
+// Atualizar Times
 export const updateTeam = async (id, name, imageUri) => {
   const db = await getDatabase();
   await db.runAsync('UPDATE teams SET name = ?, imageUri = ? WHERE id = ?', [name, imageUri, id]);
